@@ -1,5 +1,11 @@
+[.]md$
 ^README\.Rmd$
-^README-.*\.png$
-^\.travis\.yml$
 ^README\.md$
+^\.gitignore$
+^\.travis\.yml$
 ^makefile$
+^vignettes/makefile$
+^.*\.Rproj$
+^aaa\.Rmd$
+^docs$
+^\.Rproj\.user$
