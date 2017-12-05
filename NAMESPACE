@@ -2,8 +2,8 @@
 
 export(crop_global_tif)
 export(crop_worldpop_tif)
-export(get_who_buildings)
-export(get_who_streets)
+export(get_osm_buildings)
+export(get_osm_streets)
 importFrom(here,here)
 importFrom(magrittr,"%>%")
 importFrom(magrittr,extract2)

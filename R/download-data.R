@@ -1,4 +1,4 @@
-#' get_who_streets
+#' get_osm_streets
 #'
 #' Extract OSM streets for given location (\code{city}), and save them in the
 #' data directory
@@ -12,7 +12,7 @@
 #' be stored and easily \code{rbind}-ed back together on loading.
 #'
 #' @export
-get_who_streets <- function (city = "kathmandu", n = 1)
+get_osm_streets <- function (city = "kathmandu", n = 1)
 {
     region_shape <- getbb(place_name = city, format_out = "polygon")
     if (is.list (region_shape))
@@ -39,14 +39,14 @@ get_who_streets <- function (city = "kathmandu", n = 1)
 
     for (i in seq (indx))
     {
-        write_who_data (dat [indx [[i]], ], city = city, suffix = "hw",
+        write_osm_data (dat [indx [[i]], ], city = city, suffix = "hw",
                         n = np [i])
     }
 
     invisible (dat)
 }
 
-#' get_who_buildings
+#' get_osm_buildings
 #'
 #' Extract OSM buildings for given location (\code{city}), and save them in the
 #' data directory
@@ -55,7 +55,7 @@ get_who_streets <- function (city = "kathmandu", n = 1)
 #' @return The \pkg{sf}-formatted data object (invisibly)
 #'
 #' @export
-get_who_buildings <- function (city = "kathmandu", n = 1)
+get_osm_buildings <- function (city = "kathmandu", n = 1)
 {
     region_shape <- getbb(place_name = city, format_out = "polygon")
     if (is.list (region_shape))
@@ -94,37 +94,33 @@ get_who_buildings <- function (city = "kathmandu", n = 1)
         dat <- dat_full
         dat$osm_polygons <- dat$osm_polygons [indx1 [[i]], ]
         dat$osm_multipolygons <- dat$osm_multipolygons [indx2 [[i]], ]
-        write_who_data (dat, city = city, suffix = "bldg", n = np [i])
+        write_osm_data (dat, city = city, suffix = "bldg", n = np [i])
     }
 
     invisible (dat_full)
 }
 
 # n is a number appended to file name when divided into chunks
-write_who_data <- function (dat, city, suffix, n = NULL)
+write_osm_data <- function (dat, city, suffix, n = NULL)
 {
     nm <- paste0 (city, "_", suffix, n)
     assign (nm, dat)
-    data_dir <- get_who_data_dir (city = city)
+    data_dir <- get_osm_data_dir (city = city)
     fname <- file.path (data_dir, paste0 (city, "-", suffix, n, ".Rds"))
     saveRDS (get (nm), fname)
     message ("saved ", fname)
 }
 
-#' get_who_data_dir
+#' get_osm_data_dir
 #'
-#' Find the "who-data" directory corresponding to the "who" directory of this
-#' project, and the sub-directory within that corresponding to the OSM data of
-#' the named city.  The sub-dir will be created if it does not already exist.
+#' Find the sub-directory corresponding to the OSM data of the named city.  The
+#' sub-dir will be created if it does not already exist.
 #'
 #' @param city Name of city for which data are obtained, and name of
-#' corresponding sub-directory in "who-data" where data are to be stored.
+#' corresponding sub-directory in "osm" directory where data are to be stored.
 #'
-#' This assumes this repo ("who") sits in the same root directory as the
-#' corresponding one named "who-data". The latter is where the function
-#' \code{get_who_data} stores data.
 #' @noRd
-get_who_data_dir <- function (city)
+get_osm_data_dir <- function (city)
 {
     dh <- file.path (here::here (), city)
     if (!file.exists (dh))
