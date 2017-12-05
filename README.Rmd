@@ -4,7 +4,13 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
 
 # popdens
 
@@ -14,8 +20,7 @@ The goal of popdens is to ...
 
 You can install popdens from github with:
 
-
-```r
+```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("ATFutures/popdens")
 ```
@@ -24,8 +29,7 @@ devtools::install_github("ATFutures/popdens")
 
 This is a basic example which shows you how to solve a common problem:
 
-
-```r
+```{r example}
 ## basic example code
 ```
 
@@ -46,17 +50,17 @@ The following data sets are included:
 
 ### Installation
 
-
-```r
+```{r, eval=FALSE}
 devtools::install_github("ATFutures/popdens")
 ```
 
-
+```{r echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+options(width=120)
+```
 
 ### Usage
 
-
-```r
+```{r, eval=FALSE}
 library(popdens)
 
 # current verison
@@ -66,8 +70,7 @@ packageVersion("popdens")
 
 ### Test Results
 
-
-```r
+```{r, eval=FALSE}
 library(popdens)
 library(testthat)
 
