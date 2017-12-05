@@ -1,11 +1,19 @@
 Package: popdens
-Title: What the Package Does (one line, title case)
+Title: ATFutures package for population density layers
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends: R (>= 3.4.1)
+Authors@R: c(
+  person("Mark", "Padgham", email="mark.padgham@email.com", role=c("aut", "cre")),
+  person("Robin", "Lovelace", email = "rob00x@gmail.com", role = c("aut")) 
+  )
+Description: Metapackage for pre-processing of global population density data.
+Depends:
+    here,
+    magrittr,
+    osmdata,
+    raster
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Suggests: testthat
+Suggests:
+    testthat
 RoxygenNote: 6.0.1

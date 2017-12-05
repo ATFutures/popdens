@@ -8,3 +8,6 @@
 \description{
 popdens.
 }
+\author{
+Mark Padgham, Robin Lovelace
+}
