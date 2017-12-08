@@ -2,6 +2,8 @@
 #'
 #' @param ras Raster dataset from which cell values are taken
 #' @param nodes Points onto which cells will be distributed
+#' @param redistribute_missing How should empty cells be redistributed?
+#' To the nearest node by default.
 #' @return A copy of \code{nodes} containing a new population variable (pop)
 #' @export
 #' @examples
@@ -26,7 +28,7 @@
 #' nodes = sf::st_cast(ways, "POINT")
 #' nodes_new = pop2point(ras, nodes)
 #' }
-pop2point = function(ras, nodes) {
+pop2point = function(ras, nodes, redistribute_missing = "nearest") {
   pd_sf = ras %>% 
     raster::rasterToPolygons() %>% 
     sf::st_as_sf()
