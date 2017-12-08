@@ -11,3 +11,12 @@
 #' @importFrom utils packageVersion setTxtProgressBar
 #' @importFrom utils txtProgressBar unzip
 NULL
+#' Pipe operator
+#'
+#' @name %>%
+#' @rdname pipe
+#' @keywords internal
+#' @export
+#' @importFrom dplyr %>%
+#' @usage lhs \%>\% rhs
+NULL
