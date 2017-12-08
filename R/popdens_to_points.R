@@ -28,7 +28,7 @@
 #' nodes = sf::st_cast(ways, "POINT")
 #' nodes_new = pop2point(ras, nodes)
 #' }
-pop2point = function(ras, nodes, redistribute_missing = "nearest") {
+pop2point = function(ras, nodes, redistribute_missing = NULL) {
   pd_sf = ras %>% 
     raster::rasterToPolygons() %>% 
     sf::st_as_sf()
@@ -44,5 +44,27 @@ pop2point = function(ras, nodes, redistribute_missing = "nearest") {
     # sum(nodes_aggregated$pop, na.rm = T) # too few
     nodes_new = dplyr::inner_join(nodes_joined, nodes_aggregated)
     # sum(nodes_new$pop, na.rm = T) # 1/3 less - why?
+    # https://github.com/r-spatial/sf/issues/200
+    if(redistribute_missing == "nearest") {
+      sel_missing = !pd_sf$id %in% nodes_new$id
+      pd_sf_missing = pd_sf[sel_missing, ]
+      pd_sf_missing_points = sf::st_centroid(pd_sf_missing)
+      # they are equal - must redistribut all values in there:
+      (sum(pd_sf_missing_points$GHA15_040213) + sum(nodes_new$pop, na.rm = T)) / sum(values(ras$GHA15_040213), na.rm = T)
+      # solution involving buffers (st_within_distance would also work on projected data)
+      # pd_sf_missing_buffer = stplanr::geo_buffer(pd_sf_missing, 1000)
+      
+      # works but is really slow...
+      for(i in seq_along(pd_sf_missing$id)) {
+        d = st_distance(nodes_new, pd_sf_missing_points$geometry[i])
+        nodes_new$pop[which.min(d)] = nodes_new$pop[which.min(d)] + pd_sf_missing_points$GHA15_040213[i]
+      }
+      
+      # raster attempt...
+      # ras_masked = raster::mask(ras, nodes)
+      # ras_agg = raster::aggregate(ras, fact = 2, fun = mean, na.rm = TRUE)
+      # 
+      # nodes_new_redist = sf::st_join(nodes_new, pd_sf_missing, st_is_within_distance, dist = 1000)
+    }
     return(nodes_new)
 }
