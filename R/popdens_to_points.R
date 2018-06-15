@@ -104,6 +104,7 @@ pop2point = function(ras, nodes, redistribute_missing = NULL)
 #'
 #' @param xy matrix, data.frame, or tibble of points
 #' @return sf::sfc representation of same
+#' @export
 xy_to_sfc <- function (xy)
 {
     xy <- dplyr::select (xy, c (x, y)) %>%
