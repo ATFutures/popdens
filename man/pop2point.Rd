@@ -28,18 +28,25 @@ library(raster)
 library(tmap)
 library(sf)
 
-boundary_bb = getbb("Accra")
+city <- "accra"
+boundary_bb = getbb(city)
 boundary = stplanr::bb2poly(boundary_bb) \%>\% 
   sf::st_as_sf()
-# from inside the who-data repo
-old = setwd("~/ATFutures/who-data/")
-ras = raster::raster("accra/popdens/GHA15_040213.tif")
-setwd(old)
-ras # 200k cells
-# ras = mask(ras, as_Spatial(st_geometry(boundary)))
-ras = crop(ras, extent(boundary_bb)) # make smaller dataset - 148k cells
-ways = readRDS("../who-data/accra/osm/accra-hw.Rds")
-nodes = sf::st_cast(ways, "POINT")
+data_dir <- file.path ("..", "who-data", city)
+ras <- raster::raster(file.path (data_dir, "popdens",
+         "NPL_ppp_v2c_2015.tif"))
+# or  "GHA15_040213.tif" for Ghana
+ras <- crop(ras, extent(boundary_bb)) # make smaller dataset - 148k cells
+ways <- readRDS(file.path (data_dir, "osm", paste0 (city, "-hw.Rds")))
+graph <- dodgr::weight_streetnet (ways)
+nodes <- dodgr::dodgr_vertices (graph)
+# filter out all unconnected components
+nodes <- nodes [which (nodes$component == 1), ]
+nodes$component <- NULL
+# then convert to sf using internal xy_to_sfc function
+nodes <- sf::st_sf (osm_id = nodes$id, geometry = xy_to_sfc (nodes))
+# need to set CRS:
+sf::st_crs (nodes) <- 4326
 nodes_new = pop2point(ras, nodes)
 }
 }
