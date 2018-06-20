@@ -1,10 +1,14 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Build Status](https://travis-ci.org/ATFutures/popdens.svg)](https://travis-ci.org/ATFutures/popdens) [![Project Status: Concept - Minimal or no implementation has been done yet.](http://www.repostatus.org/badges/0.1.0/concept.svg)](http://www.repostatus.org/#concept)
+[![Build
+Status](https://travis-ci.org/ATFutures/popdens.svg)](https://travis-ci.org/ATFutures/popdens)
+[![Project Status: Concept - Minimal or no implementation has been done
+yet.](http://www.repostatus.org/badges/0.1.0/concept.svg)](http://www.repostatus.org/#concept)
 
 popdens
 =======
 
-Global-scale data for population density. Current potential data sources include:
+Global-scale data for population density. Current potential data sources
+include:
 
 | Source                                                                                                                                                          | Nominal Resolution | Latest Data | Future Projections? |
 |-----------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|-------------|---------------------|
@@ -13,4 +17,14 @@ Global-scale data for population density. Current potential data sources include
 | Euro. Commission [Joint Research Centre](http://data.jrc.ec.europa.eu/dataset/jrc-ghsl-ghs_pop_gpw4_globe_r2015a/resource/ece1dd0b-a69a-4804-a69b-0984b15efcdd) | 250m               | 2015        | No                  |
 | [NASA Socioecon. Data (SEDAC)](http://sedac.ciesin.columbia.edu/data/collection/gpw-v3)                                                                         | 1km                | 2020        | Yes                 |
 
-Current analyses use `worldpop` only. Potential extension to incorporate NASA data to allow for future projections.
+Current analyses use `worldpop` only. Potential extension to incorporate
+NASA data to allow for future projections.
+
+usage
+=====
+
+This package currently contains only one function which maps the
+population density layers in
+[`who-data`](https://github.com/ATFutures/who-data) onto the nearest OSM
+nodes, and dumps the resultant data in that repo (as
+`<city>/osm/popdens_nodes.Rds`).

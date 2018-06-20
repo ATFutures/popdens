@@ -23,9 +23,11 @@ pop2point <- function (city, save_data = TRUE, quiet = FALSE)
 
     data_dir <- file.path (dirname (here::here ()), "who-data", city)
     if (city == "accra")
-        ras <- raster::raster(file.path (data_dir, "popdens", "GHA15_040213.tif"))
+        ras <- raster::raster(file.path (data_dir, "popdens",
+                                         "GHA15adj_040213.tif"))
     else
-        ras <- raster::raster(file.path (data_dir, "popdens", "NPL_ppp_v2c_2015.tif"))
+        ras <- raster::raster(file.path (data_dir, "popdens",
+                                         "NPL_ppp_2020_adj_v2.tif"))
 
     ras <- raster::crop (ras, raster::extent (boundary_bb))
     ways <- readRDS (file.path (data_dir, "osm", paste0 (city, "-hw.Rds")))
