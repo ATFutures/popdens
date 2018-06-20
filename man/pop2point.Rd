@@ -4,10 +4,13 @@
 \alias{pop2point}
 \title{Assign raster cell values to points}
 \usage{
-pop2point(city, save_data = TRUE, quiet = FALSE)
+pop2point(city, contract = TRUE, save_data = TRUE, quiet = FALSE)
 }
 \arguments{
 \item{city}{City for which data are to be obtained}
+
+\item{contract}{If \code{TRUE}, street network is contracted to junctions
+only, and population densities assigned to nearest juction.}
 
 \item{save_data}{Should data be saved to \code{who-data}?}
 

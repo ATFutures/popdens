@@ -1,6 +1,8 @@
 #' Assign raster cell values to points
 #'
 #' @param city City for which data are to be obtained
+#' @param contract If \code{TRUE}, street network is contracted to junctions
+#' only, and population densities assigned to nearest juction.
 #' @param save_data Should data be saved to \code{who-data}?
 #' @param quiet If \code{FALSE}, dump progress information to screen.
 #' @return An \pkg{sf} \code{data.frame} containing OSM nodes, geometries (as
@@ -10,7 +12,7 @@
 #' \dontrun{
 #' nodes <- pop2point (city = "kathmandu")
 #' }
-pop2point <- function (city, save_data = TRUE, quiet = FALSE)
+pop2point <- function (city, contract = TRUE, save_data = TRUE, quiet = FALSE)
 {
     if (!"package:sf" %in% search ())
         stop ("Please load sf into workspace before proceeding")
@@ -35,6 +37,8 @@ pop2point <- function (city, save_data = TRUE, quiet = FALSE)
     if (!quiet)
         message ("weighting streetnet ... ", appendLF = FALSE)
     graph <- dodgr::weight_streetnet (ways)
+    if (contract)
+        graph <- dodgr::dodgr_contract_graph (graph)$graph
     nodes <- dodgr::dodgr_vertices (graph)
     osm_ids <- nodes$id # only used to check below that all worked
     #nodes <- nodes [which (nodes$component == 1), ] # connected components only
