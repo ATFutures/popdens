@@ -11,7 +11,6 @@
 #' @importFrom osmdata osm_poly2line
 #' @importFrom raster crop extent raster projectRaster writeRaster
 #' @importFrom sf st_as_sf st_centroid st_distance st_join st_point st_sfc
-#' @importFrom stplanr bb2poly
 #' @importFrom utils packageVersion setTxtProgressBar
 #' @importFrom utils txtProgressBar unzip
 NULL

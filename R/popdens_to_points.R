@@ -15,9 +15,7 @@ pop2point <- function (city, save_data = TRUE, quiet = FALSE)
     if (!"package:sf" %in% search ())
         stop ("Please load sf into workspace before proceeding")
 
-    boundary_bb <- getbb(city)
-    boundary <- stplanr::bb2poly (boundary_bb) %>% 
-        sf::st_as_sf()
+    boundary_bb <- osmdata::getbb (city)
 
     city <- tolower (city)
     if (!city %in% c ("kathmandu", "accra"))

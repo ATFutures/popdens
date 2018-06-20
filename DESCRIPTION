@@ -13,8 +13,7 @@ Imports:
     magrittr,
     osmdata,
     raster,
-    sf,
-    stplanr
+    sf
 Suggests:
     testthat
 Remotes:
