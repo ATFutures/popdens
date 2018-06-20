@@ -7,16 +7,17 @@ Authors@R: c(
   )
 Description: Metapackage for pre-processing of global population density data.
 Imports:
+    sf,
     dodgr,
     dplyr,
     here,
     magrittr,
     osmdata,
-    raster,
-    sf
+    raster
 Suggests:
     testthat
 Remotes:
+    atfutures/dodgr
     ropensci/osmdata
 License: GPL-3
 Encoding: UTF-8
