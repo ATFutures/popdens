@@ -2,6 +2,7 @@
 #'
 #' @param city City for which data are to be obtained
 #' @param save_data Should data be saved to \code{who-data}?
+#' @param quiet If \code{FALSE}, dump progress information to screen.
 #' @return An \pkg{sf} \code{data.frame} containing OSM nodes, geometries (as
 #' point objects), and aggregated population densities projected onto each node.
 #' @export
@@ -28,7 +29,7 @@ pop2point <- function (city, save_data = TRUE, quiet = FALSE)
     else
         ras <- raster::raster(file.path (data_dir, "popdens", "NPL_ppp_v2c_2015.tif"))
 
-    ras <- raster::crop(ras, extent(boundary_bb))
+    ras <- raster::crop (ras, raster::extent (boundary_bb))
     ways <- readRDS (file.path (data_dir, "osm", paste0 (city, "-hw.Rds")))
 
     if (!quiet)
@@ -111,7 +112,7 @@ assign_points <- function (ras, nodes, redistribute_missing = "")
 
         # works but is really slow...
         for (i in seq_along(pd_sf_missing$id)) {
-            d <- st_distance(nodes_new, pd_sf_missing_points$geometry[i])
+            d <- sf::st_distance(nodes_new, pd_sf_missing_points$geometry[i])
             nodes_new$pop[which.min(d)] <-
                 nodes_new$pop[which.min(d)] +
                 pd_sf_missing_points [[layer_name]] [i]
@@ -139,6 +140,7 @@ assign_points <- function (ras, nodes, redistribute_missing = "")
 #' @export
 xy_to_sfc <- function (xy)
 {
+    x <- y <- NULL
     xy <- dplyr::select (xy, c (x, y)) %>%
         as.matrix ()
     sapply (seq (nrow (xy)), function (i)

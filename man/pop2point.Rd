@@ -10,6 +10,8 @@ pop2point(city, save_data = TRUE, quiet = FALSE)
 \item{city}{City for which data are to be obtained}
 
 \item{save_data}{Should data be saved to \code{who-data}?}
+
+\item{quiet}{If \code{FALSE}, dump progress information to screen.}
 }
 \value{
 An \pkg{sf} \code{data.frame} containing OSM nodes, geometries (as
