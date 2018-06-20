@@ -15,10 +15,10 @@
 #' library(sf)
 #' 
 #' city <- "accra"
-#' boundary_bb = getbb(city)
-#' boundary = stplanr::bb2poly(boundary_bb) %>% 
+#' boundary_bb <- getbb(city)
+#' boundary <- stplanr::bb2poly(boundary_bb) %>% 
 #'   sf::st_as_sf()
-#' data_dir <- file.path ("..", "who-data", city)
+#' data_dir <- file.path (dirname (here::here ()), "who-data", city)
 #' ras <- raster::raster(file.path (data_dir, "popdens",
 #'          "NPL_ppp_v2c_2015.tif"))
 #' # or  "GHA15_040213.tif" for Ghana
@@ -35,14 +35,14 @@
 #' sf::st_crs (nodes) <- 4326
 #' nodes_new = pop2point(ras, nodes)
 #' }
-pop2point = function(ras, nodes, redistribute_missing = NULL)
+pop2point <- function(ras, nodes, redistribute_missing = "")
 {
-    pd_sf <- ras %>% 
-        raster::rasterToPolygons() %>% 
+    pd_sf <- ras %>%
+        raster::rasterToPolygons() %>%
         sf::st_as_sf()
     pd_sf$id <- 1:nrow(pd_sf)
-    nodes_joined = sf::st_join(nodes, pd_sf) 
-    # nodes_agg = aggregate(pd_sf, nodes, mean)
+    nodes_joined <- sf::st_join(nodes, pd_sf)
+    # nodes_agg <- aggregate(pd_sf, nodes, mean)
     # that works but how to divide them again?
     layer_name <- names (nodes_joined) [!names (nodes_joined) %in%
                                         c ("osm_id", "id", "geometry")]
@@ -54,8 +54,8 @@ pop2point = function(ras, nodes, redistribute_missing = NULL)
         sum (nodes_new [[layer_name]], na.rm = TRUE)
 
     # and all of this becomes redudnant, right?
-    # nodes_aggregated <- nodes_joined %>% 
-    #     sf::st_set_geometry(NULL) %>% 
+    # nodes_aggregated <- nodes_joined %>%
+    #     sf::st_set_geometry(NULL) %>%
     #     dplyr::group_by(osm_id) %>%
     #     dplyr::summarise(pop = mean(nodes_joined [[layer_name]], na.rm = T) /
     #                      sum(!is.na(nodes_joined [[layer_name]])))
@@ -68,12 +68,12 @@ pop2point = function(ras, nodes, redistribute_missing = NULL)
     # https://github.com/r-spatial/sf/issues/200
 
     # This should never be needed
-    if(redistribute_missing == "nearest") {
+    if (redistribute_missing == "nearest") {
         sel_missing <- !pd_sf$id %in% nodes_new$id
         pd_sf_missing <- pd_sf[sel_missing, ]
         pd_sf_missing_points <- sf::st_centroid(pd_sf_missing)
         # they are equal - must redistribut all values in there:
-        # (sum(pd_sf_missing_points [[layer_name]]) + 
+        # (sum(pd_sf_missing_points [[layer_name]]) +
         #  sum(nodes_new$pop, na.rm = T)) /
         # sum(values(ras [[layer_name]]), na.rm = T)
         # solution involving buffers (st_within_distance would also work on
@@ -81,9 +81,9 @@ pop2point = function(ras, nodes, redistribute_missing = NULL)
         # pd_sf_missing_buffer = stplanr::geo_buffer(pd_sf_missing, 1000)
 
         # works but is really slow...
-        for(i in seq_along(pd_sf_missing$id)) {
+        for (i in seq_along(pd_sf_missing$id)) {
             d <- st_distance(nodes_new, pd_sf_missing_points$geometry[i])
-            nodes_new$pop[which.min(d)] <- 
+            nodes_new$pop[which.min(d)] <-
                 nodes_new$pop[which.min(d)] +
                 pd_sf_missing_points [[layer_name]] [i]
         }
@@ -91,8 +91,11 @@ pop2point = function(ras, nodes, redistribute_missing = NULL)
         # raster attempt...
         # ras_masked = raster::mask(ras, nodes)
         # ras_agg = raster::aggregate(ras, fact = 2, fun = mean, na.rm = TRUE)
-        # 
-        # nodes_new_redist = sf::st_join(nodes_new, pd_sf_missing, st_is_within_distance, dist = 1000)
+        #
+        # nodes_new_redist = sf::st_join(nodes_new,
+        #                                pd_sf_missing,
+        #                                st_is_within_distance,
+        #                                dist = 1000)
     }
         return(nodes_new)
 }
@@ -114,4 +117,3 @@ xy_to_sfc <- function (xy)
                 sf::st_sfc ()) %>%
     sf::st_sfc ()
 }
-
