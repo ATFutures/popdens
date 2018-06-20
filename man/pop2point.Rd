@@ -4,49 +4,22 @@
 \alias{pop2point}
 \title{Assign raster cell values to points}
 \usage{
-pop2point(ras, nodes, redistribute_missing = NULL)
+pop2point(city, save_data = TRUE, quiet = FALSE)
 }
 \arguments{
-\item{ras}{Raster dataset from which cell values are taken}
+\item{city}{City for which data are to be obtained}
 
-\item{nodes}{Points onto which cells will be distributed}
-
-\item{redistribute_missing}{How should empty cells be redistributed?
-To the nearest node by default.}
+\item{save_data}{Should data be saved to \code{who-data}?}
 }
 \value{
-A copy of \code{nodes} containing a new population variable (pop)
+An \pkg{sf} \code{data.frame} containing OSM nodes, geometries (as
+point objects), and aggregated population densities projected onto each node.
 }
 \description{
 Assign raster cell values to points
 }
 \examples{
 \dontrun{
-devtools::install_github("robinlovelace/osmdata")
-library(osmdata)
-library(raster)
-library(tmap)
-library(sf)
-
-city <- "accra"
-boundary_bb = getbb(city)
-boundary = stplanr::bb2poly(boundary_bb) \%>\% 
-  sf::st_as_sf()
-data_dir <- file.path ("..", "who-data", city)
-ras <- raster::raster(file.path (data_dir, "popdens",
-         "NPL_ppp_v2c_2015.tif"))
-# or  "GHA15_040213.tif" for Ghana
-ras <- crop(ras, extent(boundary_bb)) # make smaller dataset - 148k cells
-ways <- readRDS(file.path (data_dir, "osm", paste0 (city, "-hw.Rds")))
-graph <- dodgr::weight_streetnet (ways)
-nodes <- dodgr::dodgr_vertices (graph)
-# filter out all unconnected components
-nodes <- nodes [which (nodes$component == 1), ]
-nodes$component <- NULL
-# then convert to sf using internal xy_to_sfc function
-nodes <- sf::st_sf (osm_id = nodes$id, geometry = xy_to_sfc (nodes))
-# need to set CRS:
-sf::st_crs (nodes) <- 4326
-nodes_new = pop2point(ras, nodes)
+nodes <- pop2point (city = "kathmandu")
 }
 }
