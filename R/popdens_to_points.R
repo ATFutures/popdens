@@ -38,7 +38,7 @@ pop2point <- function (city, contract = TRUE, save_data = TRUE, quiet = FALSE)
         message ("weighting streetnet ... ", appendLF = FALSE)
     graph <- dodgr::weight_streetnet (ways)
     if (contract)
-        graph <- dodgr::dodgr_contract_graph (graph)$graph
+        graph <- dodgr::dodgr_contract_graph (graph)
     nodes <- dodgr::dodgr_vertices (graph)
     osm_ids <- nodes$id # only used to check below that all worked
     #nodes <- nodes [which (nodes$component == 1), ] # connected components only
@@ -75,6 +75,7 @@ assign_points <- function (ras, nodes, redistribute_missing = "")
         raster::rasterToPolygons() %>%
         sf::st_as_sf()
     pd_sf$id <- 1:nrow(pd_sf)
+    pd_sf <- sf::st_transform (pd_sf, crs = sf::st_crs (nodes))
     nodes_joined <- sf::st_join(nodes, pd_sf)
     # nodes_agg <- aggregate(pd_sf, nodes, mean)
     # that works but how to divide them again?
